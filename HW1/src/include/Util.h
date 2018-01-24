@@ -27,12 +27,15 @@
 #include <algorithm>
 
 #include "Vec3D.h"
+#include "Camera.h"
+#include "World.h"
 
 using namespace std;
 
 namespace util
 {
-	SDL_Window* initSDL(SDL_GLContext& context, float width, float height)
+	//
+	SDL_Window* initSDL(SDL_GLContext& context, float width, float height);
 
 	//returns ptr to array holding all vertex data flattened
 	//stores number of vertices within ref param num_verts
@@ -46,6 +49,9 @@ namespace util
 	GLuint LoadShader(const char *vertex_path, const char *fragment_path);
 
 	GLuint LoadTexture(const char* texFile);
+
+	//
+	bool onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld);
 }
 
 #endif

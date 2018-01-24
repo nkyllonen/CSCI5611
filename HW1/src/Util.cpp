@@ -1,10 +1,11 @@
 #include "Util.h"
 
+const float step_size = 0.25f;
 
 /*--------------------------------------------------------------*/
 // initSDL : initializes SDL and returns window pointer
 /*--------------------------------------------------------------*/
-SDL_Window* initSDL(SDL_GLContext& context, float width, float height)
+SDL_Window* util::initSDL(SDL_GLContext& context, float width, float height)
 {
 	SDL_Init(SDL_INIT_VIDEO);  //Initialize Graphics (for OpenGL)
 
@@ -204,3 +205,71 @@ GLuint util::LoadTexture(const char * texFile)
 
 	return tex;
 }
+
+/*--------------------------------------------------------------*/
+// onKeyUp : determine which key was pressed and how to edit
+//				current translation or rotation parameters
+/*--------------------------------------------------------------*/
+bool util::onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
+{
+	Vec3D pos = cam->getPos();
+	Vec3D dir = cam->getDir();
+	Vec3D right = cam->getRight();
+	Vec3D up = cam->getUp();
+
+	//temps to be modified in switch
+	Vec3D temp_pos = pos;
+	Vec3D temp_dir = dir;
+	Vec3D temp_right = right;
+
+	switch (event.keysym.sym)
+	{
+	/////////////////////////////////
+	//TRANSLATION WITH ARROW KEYS
+	/////////////////////////////////
+	case SDLK_UP:
+		//printf("Up arrow pressed - step forward\n");
+		temp_pos = pos + (step_size*dir);
+		break;
+	case SDLK_DOWN:
+		//printf("Down arrow pressed - step backward\n");
+		temp_pos = pos - (step_size*dir);
+		break;
+	case SDLK_RIGHT:
+		//printf("Right arrow pressed - step to the right\n");
+		temp_pos = pos + (step_size*right);
+		break;
+	case SDLK_LEFT:
+		//printf("Left arrow pressed - step to the left\n");
+		temp_pos = pos - (step_size*right);
+		break;
+	////////////////////////////////
+	//TURNING WITH A/D KEYS
+	////////////////////////////////
+	case SDLK_d:
+		//printf("D key pressed - turn to the right\n");
+		temp_dir = dir + (step_size*right);
+		temp_right = cross(temp_dir, up); //calc new right using new dir
+		break;
+	case SDLK_a:
+		//printf("A key pressed - turn to the left\n");
+		temp_dir = dir - (step_size*right);
+		temp_right = cross(temp_dir, up); //calc new right using new dir
+		break;
+	////////////////////////////////
+	//SPACEBAR PRESS
+	////////////////////////////////
+	case SDLK_SPACE:
+	{
+
+		break;
+	}
+	default:
+		break;
+	}//END switch key press
+
+	cam->setDir(temp_dir);
+	cam->setRight(temp_right);
+	cam->setPos(temp_pos);
+	return false;
+}//END onKeyUp

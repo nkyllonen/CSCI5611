@@ -8,16 +8,10 @@
 #include <string>
 
 #include "Vec3D.h"
-#include "Coord2D.h"
 #include "Camera.h"
 
 //WorldObject classes
 #include "WorldObject.h"
-#include "WO_Door.h"
-#include "WO_Goal.h"
-#include "WO_Key.h"
-#include "WO_Start.h"
-#include "WO_Wall.h"
 
 class World{
 private:
@@ -49,8 +43,6 @@ public:
 
 	//OTHERS
 	void draw(Camera * cam, GLuint shaderProgram, GLuint uniTexID);
-	WorldObject* checkCollision(Vec3D pos);
-	void removeWO(Vec3D pos);
 
 };
 
